@@ -601,10 +601,13 @@ void vtkMRMLIGTLConnectorNode::ProcessIncomingDeviceModifiedEvent(
 
     // copy metadata from igtl message to MRML node
     for (igtl::MessageBase::MetaDataMap::const_iterator iter = modifiedDevice->GetMetaData().begin(); iter != modifiedDevice->GetMetaData().end(); ++iter)
-    {
+      {
       std::string tag = "OpenIGTLink." + iter->first;
       modifiedNode->SetAttribute(tag.c_str(), iter->second.second.c_str());
-    }
+      }
+
+    // Copy time stamp from igtl message to MRML node
+    modifiedNode->SetAttribute("OpenIGTLink.TimeStamp", std::to_string(modifiedDevice->GetTimestamp()).c_str());
   }
 
   vtkMRMLIGTLQueryNode* queryNode = this->Internal->GetPendingQueryNodeForDevice(modifiedDevice);
